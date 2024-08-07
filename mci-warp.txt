@@ -121,8 +121,7 @@
       "mtu": 1316,
       "fake_packets": "40-80",
       "fake_packets_size": "40-100",
-      "fake_packets_delay": "4-8",
-      "fake_packets_mode":"m4"
+      "fake_packets_delay": "4-8"
     },
     {
       "type": "wireguard",
