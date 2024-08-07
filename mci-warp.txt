@@ -34,11 +34,6 @@
     ],
     "rules": [
       {
-        "domain_suffix": ".ir",
-        "geosite": "ir",
-        "server": "dns-direct"
-      },
-      {
         "domain": "cp.cloudflare.com",
         "server": "dns-remote",
         "rewrite_ttl": 3000
@@ -47,16 +42,16 @@
     "final": "dns-remote",
     "static_ips": {
       "sky.rethinkdns.com": [
+        "188.114.97.6",
+        "188.114.96.6",
+        "2a06:98c1:3121::6",
+        "2a06:98c1:3120::6",
+        "104.17.148.22",
+        "104.17.147.22",
         "188.114.96.3",
         "188.114.97.3",
         "2a06:98c1:3121::3",
-        "2a06:98c1:3120::3",
-        "104.18.202.232",
-        "104.18.203.232",
-        "188.114.96.11",
-        "188.114.97.11",
-        "2a06:98c1:3121::b",
-        "2a06:98c1:3120::b"
+        "2a06:98c1:3120::3"
       ]
     },
     "independent_cache": true
@@ -67,31 +62,26 @@
       "tag": "tun-in",
       "mtu": 9000,
       "inet4_address": "172.19.0.1/28",
-      "inet6_address": "fdfe:dcba:9876::1/126",
       "auto_route": true,
       "strict_route": true,
       "endpoint_independent_nat": true,
-      "stack": "mixed",
+      "stack": "gvisor",
       "sniff": true,
-      "sniff_override_destination": true,
-      "domain_strategy": "prefer_ipv4"
+      "sniff_override_destination": true
     },
     {
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 8118,
+      "listen_port": 2334,
       "sniff": true,
-      "sniff_override_destination": true,
-      "domain_strategy": "prefer_ipv4"
+      "sniff_override_destination": true
     },
     {
       "type": "direct",
       "tag": "dns-in",
       "listen": "127.0.0.1",
-      "listen_port": 6450,
-      "override_address": "1.1.1.1",
-      "override_port": 53
+      "listen_port": 6450
     }
   ],
   "outbounds": [
@@ -100,8 +90,8 @@
       "tag": "select",
       "outbounds": [
         "auto",
-        "TVC-IR🇮🇷",
-        "TVC-DE🇩🇪"
+        "TVC-IR🇮🇷 § 0",
+        "TVC-DE🇩🇪 § 1"
       ],
       "default": "auto"
     },
@@ -109,41 +99,45 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "TVC-IR🇮🇷",
-        "TVC-DE🇩🇪"
+        "TVC-IR🇮🇷 § 0",
+        "TVC-DE🇩🇪 § 1"
       ],
-      "url": "http://cp.cloudflare.com/",
-      "interval": "10m0s"
+      "url": "http://connectivitycheck.gstatic.com/generate_204",
+      "interval": "10m0s",
+      "idle_timeout": "1h40m0s"
     },
     {
       "type": "wireguard",
-      "tag": "TVC-IR🇮🇷",
+      "tag": "TVC-IR🇮🇷 § 0",
       "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:8450:bea9:d6d5:753:6310/128"
+        "172.16.0.2/24",
+        "2606:4700:110:87b2:decd:535c:f5e7:7344/128"
       ],
-      "private_key": "QGQL6lWuQv6fZ0n7oklJB2y/A/D+C+rirxa8zbjN70s=",
-      "server": "188.114.96.146",
-      "server_port": 1074,
+      "private_key": "uDWh9rt0SCgQ+XFcnwhPyc2GRmEn03M8e4xPstLwdkc=",
+      "server": "188.114.97.20",
+      "server_port": 1070,
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": "qgXg",
-      "mtu": 1280,
-      "fake_packets": "5-10"
+      "reserved": "BX28",
+      "mtu": 1316,
+      "fake_packets": "40-80",
+      "fake_packets_size": "40-100",
+      "fake_packets_delay": "4-8",
+      "fake_packets_mode":"m4"
     },
     {
       "type": "wireguard",
-      "tag": "TVC-DE🇩🇪",
-      "detour": "TVC-IR🇮🇷",
+      "tag": "TVC-DE🇩🇪 § 1",
+      "detour": "TVC-IR🇮🇷 § 0",
       "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:83ac:4738:e243:92fd:596a/128"
+        "172.16.0.2/24",
+        "2606:4700:110:856b:5f11:9941:979d:5b01/128"
       ],
-      "private_key": "KPF5GZA2G2x6+gSir4x8pis5EvDJGhkz0NSq2DMsFFw=",
-      "server": "188.114.96.146",
-      "server_port": 1074,
+      "private_key": "eHOUeOFOIok8w/pNhyOkvjW6dDzCMRCQ2Yp8iOuYbE0=",
+      "server": "188.114.97.20",
+      "server_port": 8854,
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": "Ptin",
-      "mtu": 1120
+      "reserved": "9a+P",
+      "mtu": 1280
     },
     {
       "type": "dns",
@@ -172,13 +166,14 @@
     }
   ],
   "route": {
-    "geoip": {
-      "path": "geo-assets/sagernet-sing-geoip-geoip.db"
-    },
-    "geosite": {
-      "path": "geo-assets/sagernet-sing-geosite-geosite.db"
-    },
     "rules": [
+      {
+        "rule_set": [
+          "geoip-ir",
+          "geosite-ir"
+        ],
+        "outbound": "direct"
+      },
       {
         "inbound": "dns-in",
         "outbound": "dns-out"
@@ -194,12 +189,22 @@
       {
         "clash_mode": "Global",
         "outbound": "select"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geoip-ir",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-ir.srs",
+        "update_interval": "120h0m0s"
       },
       {
-        "domain_suffix": ".ir",
-        "geosite": "ir",
-        "geoip": "ir",
-        "outbound": "bypass"
+        "type": "remote",
+        "tag": "geosite-ir",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-ir.srs",
+        "update_interval": "120h0m0s"
       }
     ],
     "final": "select",
@@ -212,7 +217,8 @@
       "path": "clash.db"
     },
     "clash_api": {
-      "external_controller": "127.0.0.1:6756"
+      "external_controller": "127.0.0.1:6756",
+      "secret": "_Wt9VeWtExONE7JA"
     }
   }
 }
